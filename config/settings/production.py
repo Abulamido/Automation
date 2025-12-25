@@ -7,13 +7,22 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']  # For initial deployment, restrict later
 
 # Database - use DATABASE_URL if provided, otherwise SQLite for simplicity
-database_url = os.environ.get('DATABASE_URL') or 'sqlite:///db.sqlite3'
-DATABASES = {
-    'default': dj_database_url.config(
-        default=database_url,
-        conn_max_age=600
-    )
-}
+database_url = os.environ.get('DATABASE_URL', '').strip()
+if database_url:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=database_url,
+            conn_max_age=600
+        )
+    }
+else:
+    # Fallback to SQLite (no external DB configured)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
