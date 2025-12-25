@@ -6,11 +6,11 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']  # For initial deployment, restrict later
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# Database - use DATABASE_URL if provided, otherwise SQLite for simplicity
+database_url = os.environ.get('DATABASE_URL') or 'sqlite:///db.sqlite3'
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        default=database_url,
         conn_max_age=600
     )
 }
